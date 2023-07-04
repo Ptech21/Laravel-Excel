@@ -2,10 +2,12 @@
 
 namespace Maatwebsite\Excel\Jobs;
 
+use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Files\TemporaryFile;
 use Maatwebsite\Excel\Jobs\Middleware\LocalizeJob;
@@ -13,7 +15,7 @@ use Maatwebsite\Excel\Writer;
 
 class AppendViewToSheet implements ShouldQueue
 {
-    use Queueable, Dispatchable, InteractsWithQueue;
+    use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
      * @var TemporaryFile
@@ -68,6 +70,10 @@ class AppendViewToSheet implements ShouldQueue
      */
     public function handle(Writer $writer)
     {
+        if ($this->batch()->cancelled()) {
+            return;
+        }
+
         (new LocalizeJob($this->sheetExport))->handle($this, function () use ($writer) {
             $writer = $writer->reopen($this->temporaryFile, $this->writerType);
 
