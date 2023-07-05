@@ -2,10 +2,10 @@
 
 namespace Maatwebsite\Excel\Concerns;
 
-use Illuminate\Foundation\Bus\PendingDispatch;
 use Maatwebsite\Excel\Exceptions\NoFilenameGivenException;
 use Maatwebsite\Excel\Exceptions\NoFilePathGivenException;
 use Maatwebsite\Excel\Exporter;
+use Illuminate\Bus\Batch;
 
 trait Exportable
 {
@@ -35,7 +35,7 @@ trait Exportable
      * @param  string|null  $disk
      * @param  string|null  $writerType
      * @param  mixed  $diskOptions
-     * @return bool|PendingDispatch
+     * @return bool|Batch
      *
      * @throws NoFilePathGivenException
      */
@@ -61,7 +61,7 @@ trait Exportable
      * @param  string|null  $disk
      * @param  string|null  $writerType
      * @param  mixed  $diskOptions
-     * @return PendingDispatch
+     * @return Batch
      *
      * @throws NoFilePathGivenException
      */

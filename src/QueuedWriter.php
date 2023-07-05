@@ -2,7 +2,6 @@
 
 namespace Maatwebsite\Excel;
 
-use Illuminate\Foundation\Bus\PendingDispatch;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\FromQuery;
@@ -18,6 +17,7 @@ use Maatwebsite\Excel\Jobs\AppendViewToSheet;
 use Maatwebsite\Excel\Jobs\CloseSheet;
 use Maatwebsite\Excel\Jobs\QueueExport;
 use Maatwebsite\Excel\Jobs\StoreQueuedExport;
+use Illuminate\Support\Facades\Bus;
 use Traversable;
 
 class QueuedWriter
@@ -54,7 +54,7 @@ class QueuedWriter
      * @param  string  $disk
      * @param  string|null  $writerType
      * @param  array|string  $diskOptions
-     * @return \Illuminate\Foundation\Bus\PendingDispatch
+     * @return \Illuminate\Bus\Batch
      */
     public function store($export, string $filePath, string $disk = null, string $writerType = null, $diskOptions = [])
     {
@@ -69,10 +69,8 @@ class QueuedWriter
             $disk,
             $diskOptions
         ));
-
-        return new PendingDispatch(
-            (new QueueExport($export, $temporaryFile, $writerType))->chain($jobs->toArray())
-        );
+        
+        return Bus::batch($jobs->toArray())->dispatch();
     }
 
     /**
@@ -89,6 +87,7 @@ class QueuedWriter
         }
 
         $jobs = new Collection;
+        $jobs->push(new QueueExport($export, $temporaryFile, $writerType));
         foreach ($sheetExports as $sheetIndex => $sheetExport) {
             if ($sheetExport instanceof FromCollection) {
                 $jobs = $jobs->merge($this->exportCollection($sheetExport, $temporaryFile, $writerType, $sheetIndex));
