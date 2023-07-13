@@ -5,7 +5,7 @@ namespace Maatwebsite\Excel\Concerns;
 use Maatwebsite\Excel\Exceptions\NoFilenameGivenException;
 use Maatwebsite\Excel\Exceptions\NoFilePathGivenException;
 use Maatwebsite\Excel\Exporter;
-use Illuminate\Bus\Batch;
+use Illuminate\Bus\PendingBatch;
 
 trait Exportable
 {
@@ -35,7 +35,7 @@ trait Exportable
      * @param  string|null  $disk
      * @param  string|null  $writerType
      * @param  mixed  $diskOptions
-     * @return bool|Batch
+     * @return bool|PendingBatch
      *
      * @throws NoFilePathGivenException
      */
@@ -61,7 +61,7 @@ trait Exportable
      * @param  string|null  $disk
      * @param  string|null  $writerType
      * @param  mixed  $diskOptions
-     * @return Batch
+     * @return PendingBatch
      *
      * @throws NoFilePathGivenException
      */
