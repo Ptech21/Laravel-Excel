@@ -70,7 +70,7 @@ class QueuedWriter
             $diskOptions
         ));
         
-        return Bus::batch($jobs->toArray())->dispatch();
+        return Bus::batch($jobs->toArray());
     }
 
     /**
