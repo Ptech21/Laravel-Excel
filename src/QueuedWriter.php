@@ -54,7 +54,7 @@ class QueuedWriter
      * @param  string  $disk
      * @param  string|null  $writerType
      * @param  array|string  $diskOptions
-     * @return \Illuminate\Bus\Batch
+     * @return \Illuminate\Bus\PendingBatch
      */
     public function store($export, string $filePath, string $disk = null, string $writerType = null, $diskOptions = [])
     {
@@ -70,7 +70,7 @@ class QueuedWriter
             $diskOptions
         ));
         
-        return Bus::batch($jobs->toArray())->dispatch();
+        return Bus::batch($jobs->toArray());
     }
 
     /**
