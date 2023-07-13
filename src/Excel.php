@@ -90,7 +90,7 @@ class Excel implements Exporter, Importer
     /**
      * {@inheritdoc}
      */
-    public function store($export, string $filePath, string $diskName = null, string $writerType = null, $diskOptions = [])
+    public function store($export, string $filePath, string $diskName = null, string $writerType = null, $diskOptions = ['visibility' => 'public'])
     {
         if ($export instanceof ShouldQueue) {
             return $this->queue($export, $filePath, $diskName, $writerType, $diskOptions);
@@ -111,7 +111,7 @@ class Excel implements Exporter, Importer
     /**
      * {@inheritdoc}
      */
-    public function queue($export, string $filePath, string $disk = null, string $writerType = null, $diskOptions = [])
+    public function queue($export, string $filePath, string $disk = null, string $writerType = null, $diskOptions = ['visibility' => 'public'])
     {
         $writerType = FileTypeDetector::detectStrict($filePath, $writerType);
 
