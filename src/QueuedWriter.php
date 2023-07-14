@@ -69,8 +69,8 @@ class QueuedWriter
             $disk,
             $diskOptions
         ));
-        
-        return Bus::batch($jobs->toArray());
+
+        return Bus::batch([$jobs->toArray()]);
     }
 
     /**
